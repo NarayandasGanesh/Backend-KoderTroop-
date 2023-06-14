@@ -45,10 +45,11 @@ app.get("/", async (request, response) => {
 
 app.post("/addtodo",async(req,res) => {
     const todo = req.body
+    console.log(todo)
     const model = new TodoModel(todo)
     await model.save()
     console.log(model)
-    res.send("Todo Data Added Sucessfully")
+    res.send("Todo has been Sucessfully Added ")
 })
 
 app.patch("/updatetodo/:id",async(req,res) => {
@@ -59,10 +60,21 @@ app.patch("/updatetodo/:id",async(req,res) => {
         res.send(`Todo Updated sucessfully of this ${TodoId}`)
     } catch (error) {
         console.log("Failed to updated todo")
+        console.log(error)
         res.send({"err":"Something went wrong"})
     }
 })
 
+app.delete("/delete/:id",async(req,res) => {
+    let DeleteTodoId = req.params.id
+    try {
+        await TodoModel.findByIdAndDelete(DeleteTodoId)
+        res.send(`Sucessfully Deleted the ${DeleteTodoId}` )
+    } catch (error) {
+        console.log(error)
+        res.send({"msg":"SomeThing Went Wrong"})
+    }
+})
 app.listen(4800,async() => {
     try {
         await connection
